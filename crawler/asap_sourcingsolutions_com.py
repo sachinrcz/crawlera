@@ -60,7 +60,7 @@ class AsapSourcingSolutions_Com(Basic_Crawler):
         logger.debug('Product Links: {}'.format(len(product_links)))
         index = 0
         for i, item in enumerate(product_links[index:100]):
-            print('{}: Extracting: {} '.format(i + index + 1, item[0]))
+            logger.debug('{}: Extracting: {} '.format(i + index + 1, item[0]))
             self.save_product_details(item[0], item[1])
 
 

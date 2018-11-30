@@ -20,7 +20,7 @@ class Basic_Crawler:
     def save_to_csv(self, data, base_dir, headers, filename):
         exists = False
         filename = f'{base_dir}{filename}'
-        logger.debug('Path: '+filename)
+        # logger.debug('Path: '+filename)
         if os.path.exists(filename):
             exists = True
         with open(filename, 'a') as f:
