@@ -13,8 +13,8 @@ class AsapSourcingSolutions_Com(Basic_Crawler):
         self.base_dir = base_dir
         self.csvfilename = csvfilename
 
-    def get_product_links(self):
-        soup = self.get_soup('https://www.asap-sourcingsolutions.com/manufacturer/')
+    def get_product_links(self, url):
+        soup = self.get_soup(url)
         product_links = []
         for link in soup.select('a.capitalize'):
             product_links.append((link.text, self.base_domain + link['href']))
@@ -56,12 +56,16 @@ class AsapSourcingSolutions_Com(Basic_Crawler):
             self.save_product_details(manufacturer, self.base_domain + next_url['href'])
 
     def run(self):
-        product_links = self.get_product_links()
-        logger.debug('Product Links: {}'.format(len(product_links)))
-        index = 0
-        for i, item in enumerate(product_links[index:100]):
-            logger.debug('{}: Extracting: {} '.format(i + index + 1, item[0]))
-            self.save_product_details(item[0], item[1])
+        soup = self.get_soup('https://www.asap-sourcingsolutions.com/manufacturer/')
+        for item in soup.select('ul#owl-demo03 a')[1:]:
+            url = self.base_domain + item['href']
+            logger.debug(url)
+            product_links = self.get_product_links(url)
+            logger.debug('Product Links: {}'.format(len(product_links)))
+            index = 0
+            for i, item in enumerate(product_links[index:100]):
+                logger.debug('{}: Extracting: {} '.format(i + index + 1, item[0]))
+                self.save_product_details(item[0], item[1])
 
 
 if __name__ == '__main__':
