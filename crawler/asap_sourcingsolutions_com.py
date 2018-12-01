@@ -1,6 +1,8 @@
 import logging
 from app.base import Basic_Crawler
 import re
+import os
+import pandas as pd
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -57,13 +59,23 @@ class AsapSourcingSolutions_Com(Basic_Crawler):
             self.save_product_details(manufacturer, self.base_domain + next_url['href'])
 
     def run(self):
-        url = 'https://www.asap-sourcingsolutions.com/manufacturer/'
-        product_links = self.get_product_links(url)
-        logger.debug('Product Links: {}'.format(len(product_links)))
+        product_link_filename = 'Product_Links.csv'
+        if not os.path.exists(os.path.join(self.base_dir,product_link_filename)):
+            logger.debug('File Not Exists')
+            url = 'https://www.asap-sourcingsolutions.com/manufacturer/'
+            product_links = self.get_product_links(url)
+            for product_link in product_links:
+                data = {
+                    'Product_Name':product_link[0],
+                    'Product_Link': product_link[1]
+                }
+                self.save_to_csv(data,self.base_dir, ['Product_Name','Product_Link'], product_link_filename)
+            logger.debug('Product Links: {}'.format(len(product_links)))
+        df = pd.read_csv(os.path.join(self.base_dir,product_link_filename))
         index = 0
-        for i, item in enumerate(product_links[index:]):
-            logger.debug('{}: Extracting: {} '.format(i + index + 1, item[0]))
-            self.save_product_details(item[0], item[1])
+        for i, row in df.iterrows():
+            logger.debug('{}: Extracting: {} '.format(i + index + 1, row['Product_Link']))
+            self.save_product_details(row['Product_Name'], row['Product_Link'])
 
         # soup = self.get_soup('https://www.asap-sourcingsolutions.com/manufacturer/')
         # for item in soup.select('ul#owl-demo03 a')[1:]:
