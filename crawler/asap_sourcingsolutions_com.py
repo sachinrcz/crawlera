@@ -23,8 +23,9 @@ class AsapSourcingSolutions_Com(Basic_Crawler):
 
     def save_product_details(self, manufacturer, product_url):
         soup = self.get_soup(product_url)
-        headers = ['Manufacturer', 'Part_Number', 'Specification', 'NSN_Number', 'QTY', 'CAGE_NUMBER',
-                                'Product_URL', 'Source_URL']
+        self.csvfilename = manufacturer + '.csv'
+        headers = ['Manufacturer', 'Part_Number', 'Specification',
+                   'NSN_Number', 'QTY', 'CAGE_NUMBER', 'Product_URL', 'Source_URL']
         cage_code = -1
         try:
             cage_code = re.search('(\d+)', soup.select('div.col-lg-9.rhs.m_t50 div span')[0].text).group(0)
