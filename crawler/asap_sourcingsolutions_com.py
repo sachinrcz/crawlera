@@ -74,8 +74,9 @@ class AsapSourcingSolutions_Com(Basic_Crawler):
         df = pd.read_csv(os.path.join(self.base_dir,product_link_filename))
         index = 0
         for i, row in df.iterrows():
-            logger.debug('{}: Extracting: {} '.format(i + index + 1, row['Product_Link']))
-            self.save_product_details(row['Product_Name'], row['Product_Link'])
+            if i>29:
+                logger.debug('{}: Extracting: {} '.format(i + index + 1, row['Product_Link']))
+                self.save_product_details(row['Product_Name'], row['Product_Link'])
 
         # soup = self.get_soup('https://www.asap-sourcingsolutions.com/manufacturer/')
         # for item in soup.select('ul#owl-demo03 a')[1:]:
