@@ -23,7 +23,7 @@ class AsapSourcingSolutions_Com(Basic_Crawler):
 
     def save_product_details(self, manufacturer, product_url):
         soup = self.get_soup(product_url)
-        headers = fieldnames = ['Manufacturer', 'Part_Number', 'Specification', 'NSN_Number', 'QTY', 'CAGE_NUMBER',
+        headers = ['Manufacturer', 'Part_Number', 'Specification', 'NSN_Number', 'QTY', 'CAGE_NUMBER',
                                 'Product_URL', 'Source_URL']
         cage_code = -1
         try:
@@ -56,16 +56,24 @@ class AsapSourcingSolutions_Com(Basic_Crawler):
             self.save_product_details(manufacturer, self.base_domain + next_url['href'])
 
     def run(self):
-        soup = self.get_soup('https://www.asap-sourcingsolutions.com/manufacturer/')
-        for item in soup.select('ul#owl-demo03 a')[1:]:
-            url = self.base_domain + item['href']
-            logger.debug(url)
-            product_links = self.get_product_links(url)
-            logger.debug('Product Links: {}'.format(len(product_links)))
-            index = 0
-            for i, item in enumerate(product_links[index:100]):
-                logger.debug('{}: Extracting: {} '.format(i + index + 1, item[0]))
-                self.save_product_details(item[0], item[1])
+        url = 'https://www.asap-sourcingsolutions.com/manufacturer/'
+        product_links = self.get_product_links(url)
+        logger.debug('Product Links: {}'.format(len(product_links)))
+        index = 0
+        for i, item in enumerate(product_links[index:]):
+            logger.debug('{}: Extracting: {} '.format(i + index + 1, item[0]))
+            self.save_product_details(item[0], item[1])
+
+        # soup = self.get_soup('https://www.asap-sourcingsolutions.com/manufacturer/')
+        # for item in soup.select('ul#owl-demo03 a')[1:]:
+        #     url = self.base_domain + item['href']
+        #     logger.debug(url)
+        #     product_links = self.get_product_links(url)
+        #     logger.debug('Product Links: {}'.format(len(product_links)))
+        #     index = 0
+        #     for i, item in enumerate(product_links[index:100]):
+        #         logger.debug('{}: Extracting: {} '.format(i + index + 1, item[0]))
+        #         self.save_product_details(item[0], item[1])
 
 
 if __name__ == '__main__':
