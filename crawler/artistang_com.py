@@ -11,12 +11,11 @@ logger = logging.getLogger(__name__)
 
 class Artistang_Com(Basic_Crawler):
 
-    def __init__(self, base_dir = settings.BASE_DIR, csvfilename=settings.OUT_CSVFILENAME, base_domain= settings.BASE_DOMAIN, inputfilename=settings.IN_CSVFILENAME):
+    def __init__(self, base_dir , csvfilename, base_domain, inputfilename):
         self.base_domain = base_domain
         self.base_dir = base_dir
         self.csvfilename = csvfilename
         self.inputfilename = inputfilename
-        logger.debug('Test')
 
     def read_csv(self):
         filename = os.path.join(self.base_dir, self.inputfilename)
@@ -55,5 +54,9 @@ class Artistang_Com(Basic_Crawler):
         self.save_to_csv(data=data, base_dir=self.base_dir, headers=headers, filename=self.csvfilename)
 
 if __name__ == '__main__':
-    app = Artistang_Com()
+    base_dir = settings.BASE_DIR
+    csvfilename = 'Artistang_Data_1.csv'
+    base_domain = 'https://www.artisantg.com'
+    inputfilename = 'Artisian Ecotech.csv'
+    app = Artistang_Com(base_dir=base_dir, csvfilename=csvfilename, base_domain=base_domain, inputfilename=inputfilename)
     app.read_csv()

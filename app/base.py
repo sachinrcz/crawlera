@@ -24,7 +24,7 @@ class Basic_Crawler:
         if os.path.exists(filename):
             exists = True
         with open(filename, 'a') as f:
-            csvwriter = csv.DictWriter(f, fieldnames=headers)
+            csvwriter = csv.DictWriter(f, fieldnames=headers, quoting=csv.QUOTE_ALL)
             if not exists:
                 csvwriter.writeheader()
             csvwriter.writerow(data)
